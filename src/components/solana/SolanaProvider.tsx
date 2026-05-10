@@ -13,8 +13,7 @@ if (typeof window !== 'undefined') {
   window.Buffer = window.Buffer || Buffer;
 }
 
-// Import styles (standard for the adapter)
-require('@solana/wallet-adapter-react-ui/styles.css');
+// Styles are now imported in the root layout (src/app/layout.tsx)
 
 export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
   const [mounted, setMounted] = useState(false);
