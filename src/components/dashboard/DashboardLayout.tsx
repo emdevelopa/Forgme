@@ -15,17 +15,24 @@ import {
   Wallet,
   Menu,
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  Power
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { publicKey, connected } = useWallet();
+  const router = useRouter();
+  const { publicKey, connected, disconnect } = useWallet();
+
+  const handleDisconnect = async () => {
+    await disconnect();
+    router.push('/');
+  };
 
   return (
     <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
@@ -92,21 +99,35 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
           
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
               <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mb-1">Authenticated As</div>
               <div className="text-sm font-mono tracking-tighter text-white/80">
                 {publicKey ? `${publicKey.toBase58().slice(0, 4)}...${publicKey.toBase58().slice(-4)}` : 'GUEST_USER'}
               </div>
             </div>
-            <motion.div 
-                whileHover={{ scale: 1.05 }}
-                className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-neutral-700 p-[1px] shadow-glow"
-            >
-              <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center overflow-hidden">
-                <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58() || 'forgeme'}`} alt="Avatar" />
-              </div>
-            </motion.div>
+            <div className="flex items-center gap-3">
+                <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-neutral-700 p-[1px] shadow-glow"
+                >
+                <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center overflow-hidden">
+                    <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=${publicKey?.toBase58() || 'forgeme'}`} alt="Avatar" />
+                </div>
+                </motion.div>
+                
+                {connected && (
+                    <motion.button
+                        whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.1)" }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={handleDisconnect}
+                        className="w-12 h-12 rounded-2xl border border-white/10 flex items-center justify-center text-neutral-500 hover:text-red-500 transition-colors"
+                        title="Disconnect Wallet"
+                    >
+                        <Power size={20} />
+                    </motion.button>
+                )}
+            </div>
           </div>
         </header>
 
