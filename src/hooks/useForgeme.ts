@@ -5,8 +5,6 @@ import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import * as anchor from '@coral-xyz/anchor';
 import { Forgeme } from '@/lib/idl/forgeme'; // Path to IDL
 
-const PROGRAM_ID_STR = "FAqzr1i3GEX2zygQcmqjhjBKPqBY9e7TENnRBrGeNvfx";
-
 export const useForgeme = () => {
   const { connection } = useConnection();
   const wallet = useAnchorWallet();
@@ -19,9 +17,8 @@ export const useForgeme = () => {
         preflightCommitment: 'processed',
       });
       
-      const programId = new anchor.web3.PublicKey(PROGRAM_ID_STR);
-      
-      return new anchor.Program(Forgeme as any, programId, provider);
+      // In Anchor 0.29+, if IDL has the address, we only need idl and provider
+      return new anchor.Program(Forgeme as any, provider);
     } catch (err) {
       console.error("Failed to initialize Anchor program:", err);
       return null;

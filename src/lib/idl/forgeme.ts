@@ -1,6 +1,7 @@
 export const Forgeme = {
   "version": "0.1.0",
   "name": "forgeme",
+  "address": "FAqzr1i3GEX2zygQcmqjhjBKPqBY9e7TENnRBrGeNvfx",
   "instructions": [
     {
       "name": "initializeStartup",
